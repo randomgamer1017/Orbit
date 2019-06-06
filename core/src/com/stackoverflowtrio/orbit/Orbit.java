@@ -46,7 +46,6 @@ public class Orbit extends Game {
 	public static AssetManager manager;
 	@Override
 	public void create () {
-		
 		batch = new SpriteBatch();
 		menuScreen = new MainMenuScreen(this);
 		
@@ -70,14 +69,13 @@ public class Orbit extends Game {
 	@Override
 	public void render () {
 		super.render();
-
 	}
 	
 	@Override
 	public void dispose () {
 		super.dispose();
 		batch.dispose();
-//		manager.dispose();
+		manager.dispose();
 		img.dispose();
 	}
 	public void changeScreen(int screen){
