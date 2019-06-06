@@ -30,6 +30,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.stackoverflowtrio.orbit.AppPreferences;
 import com.stackoverflowtrio.orbit.Orbit;
 
 import Enemy.Enemy;
@@ -63,7 +64,7 @@ public class PlayScreen implements Screen{
 	private Powerup powerup;
 	
 	private Music music;
-	
+	private AppPreferences preferences = new AppPreferences();
 	private Array<Item> items;
 	private LinkedBlockingQueue<ItemDef> itemsToSpawn;
 	
@@ -95,8 +96,7 @@ public class PlayScreen implements Screen{
 		
 		music = Orbit.manager.get("Songs/AmbientSong.mp3", Music.class);
 		music.setLooping(true);
-		music.setVolume((float) 0.1);
-		music.play();
+		
 		
 		items = new Array<Item>();
 		itemsToSpawn = new LinkedBlockingQueue<ItemDef>();
@@ -117,7 +117,9 @@ public class PlayScreen implements Screen{
 	
 	@Override
 	public void show() {
-		// TODO Auto-generated method stub
+		music.setVolume(preferences.getMusicVolume());
+		if(preferences.isMusicEnabled())
+			music.play();
 		
 	}
 
@@ -131,8 +133,8 @@ public class PlayScreen implements Screen{
 				player.b2body.applyLinearImpulse(new Vector2(0.1f, 0), player.b2body.getWorldCenter(), true);
 			if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2body.getLinearVelocity().x >= -2)
 				player.b2body.applyLinearImpulse(new Vector2(-0.1f, 0), player.b2body.getWorldCenter(), true);
-			if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-				game.changeScreen(0);
+			if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+				game.changeScreen(3);
 				music.stop();
 			}
 		}	

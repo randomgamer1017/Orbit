@@ -9,8 +9,10 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.Preferences;
 
 import Screens.MainMenuScreen;
+import Screens.PauseScreen;
 import Screens.PlayScreen;
 import Screens.SettingsScreen;
 
@@ -42,7 +44,8 @@ public class Orbit extends Game {
 	private PlayScreen playScreen;
 	private MainMenuScreen menuScreen;
 	private SettingsScreen settingsScreen;
-	
+	private PauseScreen pauseScreen;
+	private AppPreferences preferences = new AppPreferences();
 	public static AssetManager manager;
 	@Override
 	public void create () {
@@ -58,12 +61,12 @@ public class Orbit extends Game {
 		manager.load("Sound Effects/step.wav", Sound.class);
 		manager.load("Sound Effects/metal.wav", Sound.class);
 		manager.finishLoading();
-		
 		this.setScreen(menuScreen);
 		music = Orbit.manager.get("Songs/ThemeSong.mp3", Music.class);
-		music.setVolume(musicVol);
+		music.setVolume(preferences.getMusicVolume());
 		music.setLooping(true);
-		music.play();
+		if(preferences.isMusicEnabled())
+			music.play();
 	}
 
 	@Override
@@ -83,22 +86,35 @@ public class Orbit extends Game {
 		case 0:
 			if(menuScreen == null) menuScreen = new MainMenuScreen(this);{
 				music = Orbit.manager.get("Songs/ThemeSong.mp3", Music.class);
-				music.setVolume(musicVol);
+				music.setVolume(preferences.getMusicVolume());
 				music.setLooping(true);
-				music.play();
+				if(preferences.isMusicEnabled())
+					music.play();
+				else
+					music.stop();
                 this.setScreen(menuScreen);
 			}
 			break;
 		case 1:
-			if(playScreen == null) playScreen = new PlayScreen(this);
-				this.setScreen(new PlayScreen(this));
+			playScreen = new PlayScreen(this);
+				this.setScreen(playScreen);
 			break;
 		case 2:
 			if(settingsScreen == null) settingsScreen = new SettingsScreen(this);
 			this.setScreen(settingsScreen);
 			break;
+		case 3:
+			if(pauseScreen == null) pauseScreen = new PauseScreen(this);
+				this.setScreen(new PauseScreen(this));
+			break;
+		case 4:
+				this.setScreen(playScreen);
+			break;
 		
 	}
 }
 
+	public AppPreferences getPreferences() {
+		return this.preferences;
+		}
 }
